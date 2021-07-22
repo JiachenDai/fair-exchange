@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fair_exchange.mapper.FileMapper">
+
+    <resultMap id="fileMap" type="edu.fair_exchange.domain.UploadFile">
+        <id column="id" property="id"></id>
+        <result column="filename" property="filename"></result>
+        <result column="signature" property="signature"></result>
+        <result column="file_key" property="fileKey"></result>
+        <result column="bucket_name" property="bucketName"></result>
+        <result column="receipt" property="receipt"></result>
+        <result column="file_sequence_number" property="fileSequenceNumber"></result>
+        <result column="abort_signature" property="abortSignature"></result>
+    </resultMap>
+
+    <insert id="addFile" parameterType="edu.fair_exchange.domain.UploadFile" keyProperty="id" useGeneratedKeys="true">
+        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into t_file (id, filename, signature, file_key, bucket_name, file_sequence_number) values (#{id}, #{filename}, #{signature}, #{fileKey}, #{bucketName}, #{fileSequenceNumber});
+    </insert>
+
+    <select id="getById" resultMap="fileMap">
+        select * from t_file where id = #{id};
+    </select>
+
+    <select id="getByFileSequenceNumber" resultMap="fileMap">
+        select * from t_file where file_sequence_number = #{fileSequenceNumber};
+    </select>
+
+    <update id="update" parameterType="edu.fair_exchange.domain.UploadFile">
+        update t_file set receipt = #{receipt} where id = #{id};
+    </update>
+
+    <update id="updateAbortSignatureByFileId">
+        update t_file set abort_signature = #{abortSignature} where id = #{fileId};
+    </update>
+
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fair_exchange.mapper.EmailSignatureMapper">
+
+    <resultMap id="emailSigMap" type="edu.fair_exchange.domain.EmailSignatureObject">
+        <id column="id" property="id"></id>
+        <result column="email_signature" property="emailSignature"></result>
+        <result column="response_plus_email_signature" property="responsePlusEmailSignature"></result>
+        <result column="file_sequence_number" property="fileSequenceNumber"></result>
+    </resultMap>
+
+
+    <insert id="addEmailSignature" parameterType="edu.fair_exchange.domain.EmailSignatureObject" keyProperty="id" useGeneratedKeys="true">
+        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into t_email_signature (file_sequence_number) values (#{fileSequenceNumber});
+    </insert>
+
+    <update id="update" parameterType="edu.fair_exchange.domain.EmailSignatureObject">
+        update t_email_signature set email_signature = #{emailSignature} where id = #{id};
+    </update>
+
+    <select id="getById" resultMap="emailSigMap">
+        select * from t_email_signature where id = #{id};
+    </select>
+
+    <update id="updateResponseSig" parameterType="edu.fair_exchange.domain.EmailSignatureObject">
+        update t_email_signature set response_plus_email_signature = #{responsePlusEmailSignature} where id = #{id};
+    </update>
+
+</mapper>

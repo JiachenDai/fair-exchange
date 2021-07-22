@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fair_exchange.mapper.SenderReceiverMapper">
+
+    <resultMap id="senderReceiverRelationMap" type="edu.fair_exchange.domain.SenderReceiverRelation">
+        <id column="id" property="id"></id>
+        <result column="sender_id" property="senderId"></result>
+        <result column="receiver_id" property="receiverId"></result>
+        <result column="file_id" property="fileId"></result>
+        <result column="status" property="status"></result>
+    </resultMap>
+
+    <insert id="addSenderReceiverRelation">
+        insert into t_sender_receiver_relation (sender_id, receiver_id, file_id) values (#{senderId}, #{receiverId}, #{fileId});
+    </insert>
+
+    <insert id="addSenderReceiverRelationByObject" parameterType="edu.fair_exchange.domain.SenderReceiverRelation" keyProperty="id" useGeneratedKeys="true">
+        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into t_sender_receiver_relation (id, sender_id, receiver_id, file_id, status) values (#{id}, #{senderId}, #{receiverId}, #{fileId}, #{status})
+    </insert>
+
+    <select id="checkReceive" resultMap="senderReceiverRelationMap">
+        select * from t_sender_receiver_relation where receiver_id = #{receiverId};
+    </select>
+
+    <select id="getByTransactionId" resultMap="senderReceiverRelationMap">
+        select * from t_sender_receiver_relation where id = #{transactionId};
+    </select>
+
+    <update id="updateStatus">
+        update t_sender_receiver_relation set status = 1 where id = #{transactionId};
+    </update>
+
+    <select id="listSent" resultMap="senderReceiverRelationMap">
+        select * from t_sender_receiver_relation where sender_id = #{userId};
+    </select>
+
+    <select id="listReceived" resultMap="senderReceiverRelationMap">
+        select * from t_sender_receiver_relation where receiver_id = #{userId};
+    </select>
+
+    <select id="getByFileId" resultMap="senderReceiverRelationMap">
+        select * from t_sender_receiver_relation where file_id = #{fileId};
+    </select>
+
+    <update id="updateStatusById">
+        update t_sender_receiver_relation set status = #{status} where id = #{id};
+    </update>
+</mapper>
