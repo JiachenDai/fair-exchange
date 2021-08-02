@@ -47,7 +47,7 @@ public class FileSentNotificationer {
         EmailSignatureObject emailSignatureObject = new EmailSignatureObject();
         emailSignatureObject.setFileSequenceNumber(message);
         emailSignatureMapper.addEmailSignature(emailSignatureObject);
-        String link = "http://localhost:8080/acceptByEmailLink?fileSequenceNumber=" + message + "&mailSignatureId=" + emailSignatureObject.getId();
+        String link = "http://18.170.21.40:8080/acceptByEmailLink?fileSequenceNumber=" + message + "&mailSignatureId=" + emailSignatureObject.getId();
         String subject = "File received Notification";
         String text = "Dear, User: " + receiver.getUsername() + "\nYou have received a file from User: " + sender.getUsername() + ".\nIf you want to accept this file, then click the link below:\n\n" + link;
 

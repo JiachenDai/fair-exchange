@@ -42,7 +42,7 @@ public class MQListener {
         User user = userMapper.getById(Integer.parseInt(senderReceiverRelation.getSenderId()));
         String email = user.getEmail();
         String subject = "Your receiver does not accept the file reminder";
-        String text = "Your receiver does not accept the file and what will you do next?";
+        String text = "The receiver does not respond to the file in 48 hours and the system terminates the transaction automatically. If you want to start the transaction again, please login to the system.";
         this.sendSimpleMail(email, subject, text);
     }
 
