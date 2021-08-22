@@ -6,6 +6,7 @@ import edu.fair_exchange.util.RSAUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,7 @@ public class RegisterController {
             return result;
         }
         user.setPublicKey(publicKey);
+        System.out.println("public key is param: " + publicKey);
         try {
             userMapper.updatePublicKey(Integer.parseInt(userId), publicKey);
         } catch (Exception e){
@@ -86,4 +88,41 @@ public class RegisterController {
         return result;
     }
 
+    @GetMapping("/generateKeyPair")
+    @ResponseBody
+    public Result register(@RequestParam("userId") Integer userId){
+        Result result = new Result();
+        Map<String, Object> keyPairs = null;
+        try {
+            keyPairs = RSAUtil.generateKeyPairs();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            result.setCode(ErrorCode.InternalServerError);
+            result.setData(new ErrorMessage("internal server error"));
+            return result;
+        }
+        KeyPairResult keyPairResult = new KeyPairResult();
+        keyPairResult.setPrivateKey((String) keyPairs.get("privateKey"));
+        keyPairResult.setPublicKey((String) keyPairs.get("publicKey"));
+
+        User user = userMapper.getById(userId);
+        if (user == null){
+            result.setCode(ErrorCode.InternalServerError);
+            result.setData(new ErrorMessage("No user registered."));
+            return result;
+        }
+        user.setPublicKey(keyPairResult.getPublicKey());
+        System.out.println("public key is param: " + keyPairResult.getPublicKey());
+        try {
+            userMapper.updatePublicKey(userId, keyPairResult.getPublicKey());
+        } catch (Exception e){
+            e.printStackTrace();
+            result.setCode(ErrorCode.InternalServerError);
+            result.setData(new ErrorMessage("store public key failed"));
+            return result;
+        }
+        result.setCode(ErrorCode.OK);
+        result.setData(keyPairResult);
+        return result;
+    }
 }
