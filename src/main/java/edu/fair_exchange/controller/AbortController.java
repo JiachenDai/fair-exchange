@@ -83,8 +83,8 @@ public class AbortController {
         User receiver = userMapper.getById(Integer.parseInt(relation.getReceiverId()));
         String email = receiver.getEmail();
         String subject = "File Abort";
-        String text = sender.getUsername() + "has aborted a transaction with file:" + file.getFilename();
-//        this.sendSimpleMail(email, subject, text);
+        String text = sender.getUsername() + " has aborted a transaction with file:" + file.getFilename();
+        this.sendSimpleMail(email, subject, text);
         result.setCode(ErrorCode.OK);
         return result;
     }
