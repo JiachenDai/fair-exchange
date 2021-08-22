@@ -75,6 +75,7 @@ public class FileUploadController {
         //signature verify
         try {
             X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec((new BASE64Decoder()).decodeBuffer(sender.getPublicKey()));
+            System.out.println("public key is : " + sender.getPublicKey());
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
             Signature signature = Signature.getInstance("MD5withRSA");
@@ -82,6 +83,7 @@ public class FileUploadController {
             signature.update(text.getBytes());
             boolean bool = signature.verify(Hex.decodeHex(sig));
             if (!bool){
+                System.out.println("signature verification is wrong.");
                 result.setCode(ErrorCode.InternalServerError);
                 result.setData(new ErrorMessage("unauthorized"));
                 return result;
