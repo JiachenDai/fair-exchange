@@ -31,4 +31,8 @@
         select * from t_user where email = #{email};
     </select>
 
+    <update id="updatePublicKey">
+        update t_user set public_key = #{publicKey} where id = #{userId};
+    </update>
+
 </mapper>

@@ -58,4 +58,32 @@ public class RegisterController {
         result.setCode(ErrorCode.OK);
         return result;
     }
+
+    @RequestMapping("/storePublicKey")
+    public Result register(@RequestParam("userId") String userId, @RequestParam("publicKey") String publicKey){
+        Result result = new Result();
+        if (userId == null || userId.equals("") || publicKey == null || publicKey.equals("")){
+            result.setCode(ErrorCode.InternalServerError);
+            result.setData(new ErrorMessage("lack of information, please check."));
+            return result;
+        }
+        User user = userMapper.getById(Integer.parseInt(userId));
+        if (user == null){
+            result.setCode(ErrorCode.InternalServerError);
+            result.setData(new ErrorMessage("No user registered."));
+            return result;
+        }
+        user.setPublicKey(publicKey);
+        try {
+            userMapper.updatePublicKey(Integer.parseInt(userId), publicKey);
+        } catch (Exception e){
+            e.printStackTrace();
+            result.setCode(ErrorCode.InternalServerError);
+            result.setData(new ErrorMessage("store public key failed"));
+            return result;
+        }
+        result.setCode(ErrorCode.OK);
+        return result;
+    }
+
 }

@@ -19,4 +19,6 @@ public interface UserMapper {
     List<User> getByUsernameAndEmail(@Param("username") String username, @Param("email") String email);
 
     User getByEmail(@Param("email") String email);
+
+    void updatePublicKey(@Param("userId") Integer userId, @Param("publicKey") String publicKey);
 }
