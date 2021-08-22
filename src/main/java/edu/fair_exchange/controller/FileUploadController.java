@@ -118,8 +118,8 @@ public class FileUploadController {
         mapper.addSenderReceiverRelationByObject(relation);
 
         //to rabbitmq
-//        String rela = JSON.toJSONString(relation);
-//        rabbitTemplate.convertAndSend("fair-exchange", rela);
+        String rela = JSON.toJSONString(relation);
+        rabbitTemplate.convertAndSend("fair-exchange", rela);
         rabbitTemplate.convertAndSend("send-file-notification", uploadFile.getFileSequenceNumber());
         result.setCode(ErrorCode.OK);
         result.setData(new ErrorMessage("ok"));
